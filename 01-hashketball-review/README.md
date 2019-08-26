@@ -4,10 +4,10 @@
 
 Today, we learn:
 
-* A strategy for approaching development.
-* A strategy for approaching testing.
-* How to identify different Ruby data types.
-* Show how to look up documentation for data types in Ruby
+<!-- * A strategy for approaching development. -->
+<!-- * A strategy for approaching testing. -->
+<!-- * How to identify different Ruby data types. -->
+<!-- * Show how to look up documentation for data types in Ruby -->
 * Trace data flow across methods and method chains.
 * How to decide on an appropriate enumerable method.
 * Demonstrate the use of common Array methods

@@ -119,12 +119,49 @@ end
 
 
 # def num_points_scored(player_name)
-#   # get a list of all the players
-#   # find the player whose name matches the argument 'player_name'
-#   # return that player's points
+#   game_hash.each do |location, team|
+#     team[:players].each do |name, stats|
+#       if name == player_name
+#         return stats[:points]
+#       end
+#     end
+#   end
 # end
 
+def all_players
+  home_players = game_hash[:home][:players]
+  away_players = game_hash[:away][:players]
+  home_players.merge(away_players)
+end
 
+def num_points_scored(player_name)
+  # find the player whose name matches the argument 'player_name'
+  player = all_players[player_name]
+  # return that player's points
+  player[:points]
+end
+
+def shoe_size(player_name)
+  all_players[player_name][:shoe]
+end
+
+def team_colors(team_name)
+  if game_hash[:home][:team_name] == team_name
+    game_hash[:home][:colors]
+  else
+    game_hash[:away][:colors]
+  end
+end
+
+# def team_colors(team_name)
+#   # find the team in the game_hash with the requested team_name
+#   team = game_hash.find { |location, data| data[:team_name] == team_name }
+#   # return that team's colors
+#   team[1][:colors]
+# end
+
+score = num_points_scored("Brendan Haywood")
+# binding.pry
 
 
 # # EXERCISE:

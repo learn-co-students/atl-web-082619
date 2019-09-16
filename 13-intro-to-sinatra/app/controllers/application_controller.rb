@@ -2,12 +2,7 @@ class ApplicationController < Sinatra::Base
 
     set :views, "app/views"
 
-    books = [{title: "Harry Potter and the Sorcerer's Stone",
-               author: "J.K. Rowling",
-               snippet: "Harry beats a troll"},
-               {title: "Harry Potter and the Chamber of Secrets",
-                author: "J.K. Rowling",
-                snippet: "Harry confronts racism"}]
+
 
 
     get "/" do
@@ -17,8 +12,14 @@ class ApplicationController < Sinatra::Base
 
     get "/books" do 
         # @my_name = "Paul"
-        @books = books # Book.all
+        @books = Book.all
         erb :index 
+    end
+
+    get "/books/:id" do 
+        id = params[:id]
+        @book = Book.find(id)
+        erb :show
     end
 
 end

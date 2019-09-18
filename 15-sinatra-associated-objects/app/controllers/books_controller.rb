@@ -1,6 +1,6 @@
-class BooksController < ApplicationController
-
+class BooksController < Sinatra::Base
     set :views, "app/views/books"
+    set :method_override, true
 
     get "/books" do 
         # @my_name = "Paul"

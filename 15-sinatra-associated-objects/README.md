@@ -8,6 +8,11 @@
 * Describe how mass-assignment works in relation to hashes
 * Demonstrate how to use params hash to mass-assign and create related objects
 
+
+## Activity
+    - Build index and show pages for all authors
+    - Bonus:  Have the book pages link to the author show page
+    
 ## Outline
 
 * Using forms to associate objects!

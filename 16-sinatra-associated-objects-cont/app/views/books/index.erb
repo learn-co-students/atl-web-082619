@@ -1,0 +1,10 @@
+<h1>All my books</h1>
+
+<ul>
+    <% @books.each do |book| %>
+        <li>
+             
+            <a href=<%= "/books/#{book.id}"%> ><%= book.title %></a> by <%= book.author.name %>
+        </li>
+    <% end %>
+</ul>

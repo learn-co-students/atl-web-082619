@@ -1,0 +1,11 @@
+<h1>Detail page for <%= @snack.name %></h1>
+
+<div>
+    Calories: <%= @snack.calories %>
+    Deliciousness: <%= @snack.deliciousness %>
+</div>
+
+<%= link_to "Destroy this snack", snack_path(@snack), "method" => :delete,
+    data: {:confirm => "Are you sure?"} %>
+
+<%= link_to "Index Page", snacks_path %>

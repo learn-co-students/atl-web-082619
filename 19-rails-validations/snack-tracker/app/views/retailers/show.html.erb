@@ -1,0 +1,18 @@
+<h1>Retailers#show</h1>
+
+
+<h2><%= @retailer.name %> established in <%= @retailer.year_established %></h2>
+
+
+<% if !@retailer.snacks.empty? %>
+    <div>Snacks</div>
+
+    <ul>
+        <% @retailer.snacks.each do |snack| %>
+            <li><%= link_to snack.name, snack_path(snack) %></li>
+        <% end %>
+    </ul>
+
+<% else %>
+    <div> This retailer has no snacks to show </div>
+<% end %>

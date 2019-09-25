@@ -13,8 +13,14 @@ class RetailersController < ApplicationController
   end
 
   def create
-    retailer = Retailer.create(retailer_params)
-    redirect_to retailer_path(retailer)
+    @retailer = Retailer.new(retailer_params)
+    if @retailer.save
+      redirect_to retailer_path(@retailer)
+    else
+      @retailer.snacks.build
+      render :new
+    end
+
   end
 
   private

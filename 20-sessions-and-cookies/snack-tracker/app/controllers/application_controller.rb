@@ -6,10 +6,26 @@ class ApplicationController < ActionController::Base
         # memoization
         if @current_user
             return @current_user
-        elsif cookies[:user_id] != ""   
-            @current_user = User.find(cookies[:user_id])
-        else
+        elsif !session[:user_id].nil?  
+            @current_user = User.find(session[:user_id])
+        else # not logged in
             return nil
         end
+    end
+
+    def logged_in?
+        !!current_user
+    end
+
+    def authorized
+        redirect_to login_path unless logged_in?
+    end
+
+    def admin?
+        current_user[:admin]
+    end
+
+    def authorized_admin
+        redirect_to login_path unless admin?
     end
 end

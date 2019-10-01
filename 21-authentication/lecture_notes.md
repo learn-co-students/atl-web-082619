@@ -1,130 +1,124 @@
-- uncomment bcrypt in Gemfile
+- HTTP is "Stateless" - requests don't know about each other
+- Cookies! Small pieces of data sent from a website in the headers and stored on the computer while browsing.  (show in "edit this cookie" Chrome Extension)
+- Domain Specific - show in different windows
+- Add `cookies['favorite'] = "chocolate-chip"` in `SnackController#show`; just a key-value pair (DON'T GO TO SHOW PAGE YET)
 
-- add `has_secure_password` to User model
+- Add `<%= cookies['favorite'] %>` to index page to show cookie.  Go to index page, not there yet.  Then go to show page and back to index page
 
-- add password_digest in a migration
-`rails g migration AddPasswordDigestToUsers password_digest:string
-`
+- Do the same thing with 'session' but show in Edit Cookie that it gets encrypted
 
-- create user in console
-- `user = User.create(username: "paul", password: "password")`
-- `user.authenticate("password")` returns User object
-- `user.authenticate("something_else")` returns `False`
+- On Github.com or any other website--why don't I have to log in on every page?  If it's stateless, how does it know that I'm logged in?
 
-- `user = User.create(username: "someone", password: "something", password_confirmation, "something_elsxe")` does not get saved
+- Building out sign-in; show on github what happens if you clear all cookies and reload (no longer logged in)
+    - Cookies expire
 
-- `user.valid?` is False
-- `user.errors.full_messages`
+- Create user model in app
+    ` rails g model user username `
 
-- Build create user page
+- Create a user or two in the console
 
-- routes for user new/create
-- `resources :users, only: [:new, :create]`
+- How should we build our login page?  Doesn't really map to a CRUD action
+    -   get '/login', to: 'sessions#new'
+    - show in rake routes
+    - login_path
 
-- `rails g controller Users new` (Why am I not including create?)
+- add controller with new action `rails g controller sessions new`
 
-new.html.erb
+- Add link on index page
 
-```rb
-<h1>Create a new user or <%= link_to "login", login_path %></h1>
-
-<%= form_for @user do |f| %>
-    <%= f.label :username %>
-    <%= f.text_field :username %>
-    <%= f.label :password %>
-    <%= f.password_field :password %>
-    <%= f.label :password_confirmation %>
-    <%= f.password_field :password_confirmation %>
-    <%= f.submit %>
-<% end %>
+- Build `new.html.erb`
+    - Using `form_tag` since the form is not tied to a model
+```
+    <h1>Login</h1>
+    <%= form_tag '/login' do %>
+        <%= label :username, "Username" %>
+        <%= text_field_tag :username %>
+        <%= submit_tag 'Login' %>
+    <% end %>
 ```
 
-```rb
-class UsersController < ApplicationController
-  def new
-    @user = User.new
-  end
+- Form needs to post somewhere; add `post '/login', to: "sessions#create"` to routes.rb
 
-  def create
-    @user = User.new(user_params)
+- Elicit desired behavior of login method, build:
 
-    if @user.valid?
-        @user.save
-        redirect_to snacks_path
-    else
-        render :new
+```rb  
+def create
+        @user = User.find_by(username: params[:username])
+
+        if @user
+            session[:user_id] = @user.id
+            redirect_to snacks_path
+        else
+            flash.notice = "No user found with that name"
+            render :new
+        end
     end
-  end
+```
+- flash - a specific type of cookie that only persists for one request-response cycle; `flash.notice` and `flash.alert` 
 
+- add `<div class="error" > <%= flash.notice %></div>` to sessions/new.html.erb
 
-  private
+- Login link doesn't make sense if already logged in.  Change code to:
 
-  def user_params
-    params.require(:user).permit(:username, :password, :password_confirmation)
-  end
+```rb
+    <% if session[:user_id] %>
+        <h1>Welcome <%= User.find(session[:user_id]).username %></h1>
+    <% else %>
+    <%= link_to "Login", login_path %>
+    <% end %>
+```
 
+- Demonstrate deleting the session
+
+Build logout
+
+routes.rb
+- `delete '/logout', to: 'sessions#destroy', as 'logout'`
+SessionsController#destroy
+```
+def destroy
+    session.clear
+    redirect_to login_path
 end
 ```
-Demo creating a user.  Should log in upon user-creation:
+`<%= link_to "Logout", "/logout" %>`
+won't work because it's a get request
+`<%= link_to "Logout", "/logout", method: "DELETE" %>`
 
-users_controller.rb
-```rb
-  def create
-    @user = User.new(user_params)
 
-    if @user.valid?
-        @user.save
-        ** session['user_id'] = @user.id **
-        redirect_to snacks_path
-    else
-        render :new
+- User is going to be necessary all over the place
+    - ApplicationController:  All other controllers inherit from it, so stuff there is accessible all over
+
+    This breaks when no session (i.e., logged out):
+
+    ```rb
+    def current_user
+        @current_user = User.find(session[:user_id]).username
     end
-  end
-``` 
-
-add to login view:
-
-# sessions/new.html.erb
-```rb
-  <%= label_tag "Password" %>
-  <%= password_field_tag :password %>
-```
-
-Try to login with byebug in SessionsController#create
-
-```rb
-class SessionsController < ApplicationController
-
-  def new
-  end
-
-  def create
-    @user = User.find_by(username: params[:username])
-
-    if @user.authenticate 
-        session[:user_id] = @user.id 
-        redirect_to snacks_path
-    else 
-        flash.notice = "No user found with that name"
-        render :new
+    ```
+    - This works (note `find_by`instead of `find`)
+    
+    ```rb    
+    def current_user
+        @current_user = User.find_by(id: session[:user_id])
     end
-  end
-```
+    ```
 
-This will break if `user` is undefined--check for `@user && @user.authenticate...`
+    - doesn't work until you add `helper_method :current_user`
 
-OR 
+    - Use `current_user` more than once on a single page
 
-```rb
-  def create
-  @user = User.find_by(username: params[:username])
+    - SHow repeated sql queries in browser/console
+    ```rb
+    # memoization
+    def current_user
+        if @current_user
+            @current_user
+        else
+            @current_user = User.find_by(id: session[:user_id])
+        end
 
-  if @user && @user.authenticate(params[:password])
-      session[:user_id] = @user.id 
-      redirect_to snacks_path
-  else
-      flash.notice = "Username and password do not match"
-      render :new
-  end
-end
-```
+    end
+    ```
+
+ 

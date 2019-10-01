@@ -1,6 +1,4 @@
-** Authentication **
-
-Goals:
-
-- Use the `bcrypt` gem to add password to a `User` model
-- Add ability to create a new user through the web interface
+* Objectives
+    - Explain the difference between sessions and cookies
+    - Use cookies/sessions to store persistent data
+    - Retrieve and use data stored in cookies/sessions

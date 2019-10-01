@@ -1,56 +1,56 @@
 class SnacksController < ApplicationController
-  
-  before_action :find_snack, only: [:edit, :update, :show]
 
-
-  def index
-    @snacks = Snack.all
-  end
-
-  def show
-    cookies['favorite'] = 'chocolate-chip'
-    session['secret-favorite'] = 'oatmeal-raisin'
-  end
-
-  def new
-    # get request to load empty form
-    @snack = Snack.new
-  end
-
-  def create
-    # post request to make the snack from the form
-    # byebug
-    @snack = Snack.create(snack_strong_params)
-    if @snack.errors
-      render :new
-    else
-      redirect_to @snack
+    before_action :find_snack, only: [:edit, :update, :show]
+    before_action :authorized
+    
+    def home
     end
-  end
 
-  def edit
-    # load edit form
-  end
+    def index
+        @snacks = Snack.all
+    end
 
-  def update
-    # update snack based on form
-    @snack.update(snack_strong_params)
-    redirect_to @snack
-  end
+    def show
+        cookies["favorite_flavor"] = "chocolate chip"
+        cookies["last_snack"] = @snack.name
+        session["secret_favorite"] = "oatmeal raisin"
+    end
 
-  def destroy
-    Snack.destroy(params[:id])
-    redirect_to snacks_path
-  end
+    def new
+        @snack = Snack.new
+    end
 
-  private
+    def create
+        @snack = Snack.new(snack_params)
+        if @snack.save
+            redirect_to snack_path(@snack)
+        else
+            render :new
+        end
+    end
 
-  def snack_strong_params
-    params.require(:snack).permit(
-        :name, :deliciousness, :calories, :retailer_id)
-  end
+    def edit
 
-  def find_snack
-    @snack = Snack.find(params[:id])
-  end
+    end
+
+    def update
+        @snack.update(snack_params)
+        redirect_to @snack
+    end
+
+    def destroy
+        Snack.destroy(params[:id])
+        redirect_to snacks_path
+    end
+
+    private
+
+    def find_snack
+        @snack = Snack.find(params[:id])
+    end
+
+    def snack_params
+        params.require(:snack).permit(:name, :calories, 
+            :deliciousness, :retailer_id)
+    end
 end

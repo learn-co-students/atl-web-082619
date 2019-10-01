@@ -1,8 +1,11 @@
-<h1><%= @retailer.name %> </h1>
+<h1>Retailers#show</h1>
 
-<div>Year established: <%= @retailer.year_established %></div>
 
-<h2>Our delicious snacks</h2>
+<h2><%= @retailer.name %> established in <%= @retailer.year_established %></h2>
+
+
+<% if !@retailer.snacks.empty? %>
+    <div>Snacks</div>
 
     <ul>
         <% @retailer.snacks.each do |snack| %>
@@ -10,3 +13,6 @@
         <% end %>
     </ul>
 
+<% else %>
+    <div> This retailer has no snacks to show </div>
+<% end %>

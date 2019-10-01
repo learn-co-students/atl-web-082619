@@ -1,4 +1,7 @@
 class RetailersController < ApplicationController
+
+  before_action :authorized
+  
   def index
     @retailers = Retailer.all
   end
@@ -13,18 +16,19 @@ class RetailersController < ApplicationController
   end
 
   def create
-    @retailer = Retailer.create(strong_params)
-    if @retailer.errors
+    @retailer = Retailer.new(retailer_params)
+    if @retailer.save
+      redirect_to retailer_path(@retailer)
+    else
       @retailer.snacks.build
       render :new
-    else
-      redirect_to retailer_path(@retailer)
     end
+
   end
 
   private
 
-  def strong_params
+  def retailer_params
     params.require(:retailer).permit(:name, :year_established,
         snacks_attributes: [:name, :calories, :deliciousness])
   end

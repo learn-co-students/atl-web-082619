@@ -3,9 +3,9 @@
 one:
   name: MyString
   calories: 1
-  deliciour: MyString
+  deliciousness: 1
 
 two:
   name: MyString
   calories: 1
-  deliciour: MyString
+  deliciousness: 1

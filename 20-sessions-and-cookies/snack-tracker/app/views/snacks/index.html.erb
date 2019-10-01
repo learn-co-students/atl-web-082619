@@ -1,8 +1,13 @@
-<h1>Snack Index Page for <%= current_user.username %></h1>
+
+<% if current_user %>
+    <h1>Snack Index Page for <%= current_user.username %></h1>
+<% else %>
+    <h1>Snack Index Page</h1>
+<% end %>
 
 <h2>My favorite cookie is <%= cookies["favorite_flavor"] %></h2>
-<h3><%= current_user.username %>'s secret favorite cookie is <%= session["secret_favorite"] %></h3>
-<h2>The last snack <%= current_user.username %> looked at was <%= cookies["last_snack"] %></h2>
+<h3>Your secret favorite cookie is <%= session["secret_favorite"] %></h3>
+<h2>The last snack you looked at was <%= cookies["last_snack"] %></h2>
 <ul>
     <% @snacks.each do |snack| %>
         <li><%= link_to snack.name, snack_path(snack) %></li>

@@ -35,6 +35,7 @@ alertButton.addEventListener("click", function() {
   const newComment = document.querySelector("#new-comment")
   // input.value
 
+  let comment = newComment.value
 // listen to when the user submits the form
   // lets grab the form
   const commentForm = document.querySelector("#comment-form")
@@ -42,7 +43,6 @@ alertButton.addEventListener("click", function() {
   // listen for the submit ON THE FORM
   commentForm.addEventListener("submit", function(e) {
     e.preventDefault()
-    let comment = newComment.value
     console.log(comment)
     // 🤚 on the DOM
     const p = document.createElement("p")
@@ -51,5 +51,22 @@ alertButton.addEventListener("click", function() {
     const commentContainer = document.querySelector("#comments-container")
     commentContainer.appendChild(p)
     // commentForm.reset()
+
+  })
+
+
+  const buttonParent = document.querySelector("#button-parent")
+
+  console.log(buttonParent)
+
+  buttonParent.addEventListener("click", function(e) {
+    console.log(e.target)
+    // only IIIIIIFFFFF a button is clicked THEN do something
+    if (e.target.id === "errr") {
+      console.error("ya done goofed")
+    }
+    if (e.target.id === "") {
+      
+    }
 
   })

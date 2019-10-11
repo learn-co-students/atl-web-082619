@@ -1,0 +1,19 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Temp:</strong>
+  <%= @burger.temp %>
+</p>
+
+<p>
+  <strong>Protein:</strong>
+  <%= @burger.protein %>
+</p>
+
+<p>
+  <strong>Cheese:</strong>
+  <%= @burger.cheese %>
+</p>
+
+<%= link_to 'Edit', edit_burger_path(@burger) %> |
+<%= link_to 'Back', burgers_path %>

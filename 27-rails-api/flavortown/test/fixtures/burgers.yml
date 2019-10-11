@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  temp: MyString
+  protein: MyString
+  cheese: false
+
+two:
+  temp: MyString
+  protein: MyString
+  cheese: false
